@@ -10,6 +10,9 @@
         <VerticalStackLayout>
             <Label Text="Charisma URL"></Label>
             <Entry x:Name="Url" Text="{Binding Url}"></Entry>
+            <Button 
+                Text="OK"
+                Command="{Binding SubmitCommand}"/>
         </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>

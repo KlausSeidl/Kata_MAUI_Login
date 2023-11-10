@@ -30,7 +30,7 @@ namespace Kata_Login
         private async void ShowSettings_OnClicked(object sender, EventArgs e)
         {
             // Settings page anzeigen
-            await _navigationService.PushAsync<SettingsViewModel>(null);
+            await _navigationService.PushModalAsync<SettingsViewModel>(null);
         }
     }
 }

@@ -5,6 +5,7 @@
         void SetMainPage<TViewModel>(object parameter, bool wrapInNavigationPage = true);
         Task PushAsync<TViewModel>(object parameter);
         Task PopAsync();
+        Task PushModalAsync<TViewModel>(object parameter);
     }
 }
 

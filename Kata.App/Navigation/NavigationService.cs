@@ -76,6 +76,18 @@ namespace Kata_Login.Navigation
 
         public Task PushAsync<TViewModel>(object parameter)
         {
+            var nextPage = GetNextPage<TViewModel>(parameter);
+            return Navigation.PushAsync(nextPage);
+        }
+
+        public Task PushModalAsync<TViewModel>(object parameter)
+        {
+            var nextPage = GetNextPage<TViewModel>(parameter);
+            return Navigation.PushModalAsync(nextPage);
+        }
+
+        private Page GetNextPage<TViewModel>(object parameter)
+        {
             if (_app == null)
                 throw new Exception("You need to call SetApp before navigating!");
 
@@ -91,14 +103,15 @@ namespace Kata_Login.Navigation
 
                 var nextPage = _serviceProvider.GetService(navigateToPageType) as Page;
                 nextPage.BindingContext = viewModel;
-
-                return Navigation.PushAsync(nextPage);
+                
+                return nextPage;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
+
             
         }
 
