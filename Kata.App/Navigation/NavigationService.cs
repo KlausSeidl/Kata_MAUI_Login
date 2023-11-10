@@ -82,15 +82,24 @@ namespace Kata_Login.Navigation
             if (!ViewModelPageMapping.TryGetValue(typeof(TViewModel), out var navigateToPageType))
                 throw new Exception($"{typeof(TViewModel)} was not registered");
 
-            var viewModel = _serviceProvider.GetService(typeof(TViewModel));
+            try
+            {
+                var viewModel = _serviceProvider.GetService(typeof(TViewModel));
 
-            if (viewModel is IInitialize initializableVm)
-                initializableVm.Init(parameter);
+                if (viewModel is IInitialize initializableVm)
+                    initializableVm.Init(parameter);
 
-            var nextPage = _serviceProvider.GetService(navigateToPageType) as Page;
-            nextPage.BindingContext = viewModel;
+                var nextPage = _serviceProvider.GetService(navigateToPageType) as Page;
+                nextPage.BindingContext = viewModel;
 
-            return Navigation.PushAsync(nextPage);
+                return Navigation.PushAsync(nextPage);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
         public Task PopAsync()

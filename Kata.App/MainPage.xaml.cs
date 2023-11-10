@@ -1,11 +1,17 @@
-﻿namespace Kata_Login
+﻿using Kata_Login.Navigation;
+using Kata.Core.Navigation;
+using Kata.Core.ViewModels;
+
+namespace Kata_Login
 {
     public partial class MainPage : ContentPage
     {
         int count = 0;
-
-        public MainPage()
+        private INavigationService _navigationService;
+        
+        public MainPage(INavigationService navigationService)
         {
+            _navigationService = navigationService;
             InitializeComponent();
         }
 
@@ -19,6 +25,12 @@
                 CounterBtn.Text = $"Clicked {count} times";
 
             SemanticScreenReader.Announce(CounterBtn.Text);
+        }
+
+        private async void ShowSettings_OnClicked(object sender, EventArgs e)
+        {
+            // Settings page anzeigen
+            await _navigationService.PushAsync<SettingsViewModel>(null);
         }
     }
 }

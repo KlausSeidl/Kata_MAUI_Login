@@ -1,6 +1,4 @@
-﻿using Kata_Login.Navigation;
-
-namespace WoundApp.Navigation
+﻿namespace Kata_Login.Navigation
 {
     public static class NavigationServiceExtensions
     {

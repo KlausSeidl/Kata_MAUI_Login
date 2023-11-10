@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kata_Login.Views.SettingsPage"
+             xmlns:viewModels="clr-namespace:Kata.Core.ViewModels;assembly=Kata.Core"
+             x:DataType="viewModels:SettingsViewModel"
+             Title="Settings">
+    <ContentPage.Content>
+        <VerticalStackLayout>
+            <Label Text="Charisma URL"></Label>
+            <Entry x:Name="Url" Text="{Binding Url}"></Entry>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
