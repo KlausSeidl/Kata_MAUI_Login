@@ -1,11 +1,10 @@
-﻿namespace Kata.Core.Navigation
-{
-    public interface INavigationService
-    {
-        void SetMainPage<TViewModel>(object parameter, bool wrapInNavigationPage = true);
-        Task PushAsync<TViewModel>(object parameter);
-        Task PopAsync();
-        Task PushModalAsync<TViewModel>(object parameter);
-    }
-}
+﻿namespace Kata.Core.Navigation;
 
+public interface INavigationService
+{
+    void SetMainPage<TViewModel>(object parameter, bool wrapInNavigationPage = true);
+    Task PushAsync<TViewModel>(object parameter);
+    Task PopAsync();
+    Task PushModalAsync<TViewModel>(object parameter);
+    Task PopModalAsync();
+}

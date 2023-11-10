@@ -1,17 +1,15 @@
-﻿namespace Kata_Login.Navigation
+﻿namespace Kata_Login.Navigation;
+
+public static class NavigationServiceExtensions
 {
-    public static class NavigationServiceExtensions
+    public static MauiAppBuilder AddViewModelMapping<TView, TViewModel>(this MauiAppBuilder builder)
+        where TView : Page
     {
-        public static MauiAppBuilder AddViewModelMapping<TView, TViewModel>(this MauiAppBuilder builder) 
-            where TView : Page
-        {
-            builder.Services.AddTransient(typeof(TView));
-            builder.Services.AddTransient(typeof(TViewModel));
+        builder.Services.AddTransient(typeof(TView));
+        builder.Services.AddTransient(typeof(TViewModel));
 
-            NavigationService.ViewModelPageMapping.Add(typeof(TViewModel), typeof(TView));
+        NavigationService.ViewModelPageMapping.Add(typeof(TViewModel), typeof(TView));
 
-            return builder;
-        }
+        return builder;
     }
 }
-

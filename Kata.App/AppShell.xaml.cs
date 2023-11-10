@@ -1,10 +1,9 @@
-﻿namespace Kata_Login
+﻿namespace Kata_Login;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

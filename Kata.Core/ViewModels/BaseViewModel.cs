@@ -2,54 +2,59 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Kata.Core.Navigation;
 
-namespace Kata.Core.ViewModels
+namespace Kata.Core.ViewModels;
+
+public abstract class BaseViewModel : ObservableObject
 {
-    public abstract partial class BaseViewModel : ObservableObject
+    public BaseViewModel(INavigationService navigationService, IMessenger messenger)
     {
-        protected IMessenger Messenger { get; }
-        protected INavigationService NavigationService { get; }
+        Messenger = messenger;
+        NavigationService = navigationService;
+    }
 
-        public BaseViewModel(INavigationService navigationService, IMessenger messenger)
+    protected IMessenger Messenger { get; }
+    protected INavigationService NavigationService { get; }
+
+    protected Task ShowViewModel<TViewModel>(object parameter = null)
+    {
+        return NavigationService.PushAsync<TViewModel>(parameter);
+    }
+
+    protected Task<ViewModelResultMessage<T>> ShowViewModelWithResult<TViewModel, T>(object parameter = null)
+    {
+        var taskSource = new TaskCompletionSource<ViewModelResultMessage<T>>();
+
+        Messenger.Register<ViewModelResultMessage<T>>(this, (_, m) =>
         {
-            Messenger = messenger;
-            NavigationService = navigationService;
-        }
-
-        protected Task ShowViewModel<TViewModel>(object parameter = null)
-        {
-            return NavigationService.PushAsync<TViewModel>(parameter);
-        }
-
-        protected Task<ViewModelResultMessage<T>> ShowViewModelWithResult<TViewModel, T>(object parameter = null)
-        {
-            TaskCompletionSource<ViewModelResultMessage<T>> taskSource = new TaskCompletionSource<ViewModelResultMessage<T>>();
-
-            Messenger.Register<ViewModelResultMessage<T>>(this, (_, m) =>
+            if (m.Sender is TViewModel)
             {
-                if (m.Sender is TViewModel)
-                {
-                    taskSource.SetResult(m);
-                    Messenger.Unregister<ViewModelResultMessage<T>>(this);
-                }
-            });
+                taskSource.SetResult(m);
+                Messenger.Unregister<ViewModelResultMessage<T>>(this);
+            }
+        });
 
-            var task = taskSource.Task;
+        var task = taskSource.Task;
 
-            ShowViewModel<TViewModel>(parameter);
+        ShowViewModel<TViewModel>(parameter);
 
-            return task;
-        }
+        return task;
+    }
 
-        protected async Task CloseAndReturn<T>(T result = default(T))
-        {
-            await NavigationService.PopAsync();
-            Messenger.Send(new ViewModelResultMessage<T>(this, result, false));
-        }
+    protected async Task CloseAndReturn<T>(T result = default)
+    {
+        await NavigationService.PopAsync();
+        Messenger.Send(new ViewModelResultMessage<T>(this, result, false));
+    }
 
-        protected async Task Cancel<T>()
-        {
-            await NavigationService.PopAsync();
-            Messenger.Send(new ViewModelResultMessage<T>(this, default(T), true));
-        }
+    protected async Task CloseModal<T>(T result = default)
+    {
+        await NavigationService.PopModalAsync();
+        Messenger.Send(new ViewModelResultMessage<T>(this, result, false));
+    }
+    
+    protected async Task Cancel<T>()
+    {
+        await NavigationService.PopAsync();
+        Messenger.Send(new ViewModelResultMessage<T>(this, default, true));
     }
 }

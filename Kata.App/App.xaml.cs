@@ -1,38 +1,55 @@
 ﻿using Kata_Login.Navigation;
+using Kata_Login.Views;
 using Kata.Core.Services;
 using Kata.Core.ViewModels;
 
-namespace Kata_Login
+namespace Kata_Login;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    private readonly NavigationService _navigationService;
+    private readonly ISettingsService _settingsService;
+
+    public App(NavigationService navigationService, ISettingsService settingsService)
     {
-        private readonly NavigationService _navigationService;
-        private readonly ISettingsService _settingsService;
-        
-        public App(NavigationService navigationService, ISettingsService settingsService)
-        {
-            _navigationService = navigationService;
-            _settingsService = settingsService;
-            InitializeComponent();
+        _navigationService = navigationService;
+        _settingsService = settingsService;
+        InitializeComponent();
 
-            MainPage = new AppShell();
-            
-            navigationService.SetApp(this);
+        MainPage = new AppShell();
+
+        navigationService.SetApp(this);
+    }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+
+        SetStartupPage();
+    }
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        SetStartupPage();
+    }
+
+    private void SetStartupPage()
+    {
+        if (string.IsNullOrWhiteSpace(_settingsService.ServerUrl))
+        {
+            _navigationService.PushModalAsync<SettingsViewModel>(null);
         }
-
-        protected override void OnStart()
+        else
         {
-            base.OnStart();
-
-            if (string.IsNullOrWhiteSpace(_settingsService.ServerUrl))
+            if (string.IsNullOrWhiteSpace(_settingsService.Pin))
             {
-                _navigationService.PushModalAsync<SettingsViewModel>(null);
+                _navigationService.PushModalAsync<LoginViewModel>(null);
             }
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
+            else
+            {
+                _navigationService.PushModalAsync<EnterPinViewModel>(null);
+            }
         }
     }
 }
